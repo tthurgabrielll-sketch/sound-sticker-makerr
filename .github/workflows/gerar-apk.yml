@@ -22,12 +22,13 @@ jobs:
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Extrair projeto e preparar Gradle
-        run: |
-          unzip -o SoundStickerMaker.zip
-          cd SoundStickerMaker
-          gradle wrapper --gradle-version 8.9
-          chmod +x gradlew
+      - name: Configurar Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Extrair projeto
+        run: unzip -o "SoundStickerMaker*.zip"
 
       - name: Gerar chave de assinatura Release
         run: |
@@ -50,7 +51,7 @@ jobs:
           RELEASE_KEY_PASSWORD: SoundSticker2026
         run: |
           cd SoundStickerMaker
-          ./gradlew testDebugUnitTest assembleRelease
+          gradle testDebugUnitTest assembleRelease
 
       - name: Disponibilizar APK para Download
         uses: actions/upload-artifact@v4
